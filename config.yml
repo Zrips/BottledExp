@@ -1,0 +1,22 @@
+bottle:
+  xpCost: 10
+  xpEarn: 10
+  useItems: false
+  consumedItem: 374
+  amountConsumed: 1
+  useMoney: true
+  moneyCost: 100.0
+language:
+  errAmount: '&4The amount has to be a number!'
+  errXP: '&4You don''t have enough XP!'
+  errMoney: '&4You don''t have enough money!'
+  currentXP: '&2You currently have &3{xp} &2xp and you are at lvl &3{level}&2!'
+  currentXP2: '&2You still need &3{xpdelta} &2xp or &3{bottles} &2bottles for next
+    level!'
+  order: '&2You have ordered: &3{bottles} &2bottles!'
+  refund: '&2Refund issued! Amount: &3{amount}'
+  itemConsume: '&4You don''t have enough items!'
+  money: '&eTransaction cost: &3{cost}'
+  enchant: '&2You have spend &3{xp} &2xp for this enchantment'
+  morexp: '&4Players earn more XP through XP bottles than they cost!'
+  noperm: '&4You don''t have permission to do this!'
