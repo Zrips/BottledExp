@@ -54,7 +54,7 @@ public class Calculations {
 	
 	//xp calculation for one current lvl 
 	public static int currentlevelxpdelta(Player player) {
-		int levelxp=deltaLevelToExp(player.getLevel()) - (player.getTotalExperience()-levelToExp(player.getLevel()));
+		int levelxp=deltaLevelToExp(player.getLevel()) - ((Calculations.levelToExp(player.getLevel()) + (int) (Calculations.deltaLevelToExp(player.getLevel()) * player.getExp()))-levelToExp(player.getLevel()));
 		return levelxp;
 	}
 	
@@ -67,4 +67,45 @@ public class Calculations {
 		text = ReplaceWhat.replace(Replace, text);
 		return text;
 	}
+	 	public static String codeCleaning(String inputString) {
+	       inputString = inputString.replaceAll("([0-9])", "");
+	       inputString = inputString.replace("Enchantment[, ", "");
+	       inputString = inputString.replace("]", "");
+	       inputString = inputString.replace("_", " ");
+	       return inputString;
+	   }
+	 
+	   public static String toSentenceCase(String inputString) {
+	       String result = "";
+	       if (inputString.length() == 0) {
+	           return result;
+	       }
+	       char firstChar = inputString.charAt(0);
+	       char firstCharToUpperCase = Character.toUpperCase(firstChar);
+	       result = result + firstCharToUpperCase;
+	       boolean terminalCharacterEncountered = false;
+	       char[] terminalCharacters = {'.', '?', '!'};
+	       for (int i = 1; i < inputString.length(); i++) {
+	           char currentChar = inputString.charAt(i);
+	           if (terminalCharacterEncountered) {
+	               if (currentChar == ' ') {
+	                   result = result + currentChar;
+	               } else {
+	                   char currentCharToUpperCase = Character.toUpperCase(currentChar);
+	                   result = result + currentCharToUpperCase;
+	                   terminalCharacterEncountered = false;
+	               }
+	           } else {
+	               char currentCharToLowerCase = Character.toLowerCase(currentChar);
+	               result = result + currentCharToLowerCase;
+	           }
+	           for (int j = 0; j < terminalCharacters.length; j++) {
+	               if (currentChar == terminalCharacters[j]) {
+	                   terminalCharacterEncountered = true;
+	                   break;
+	               }
+	           }
+	       }
+	       return result;
+	   }
 }

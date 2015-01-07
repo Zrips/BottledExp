@@ -50,6 +50,10 @@ public class Config {
 		BottledExp.bottleCost = config.getDouble("bottle.bottleCost");
 		config.set("bottle.bottleCost", BottledExp.bottleCost);
 		
+		config.addDefault("bottle.ShowEnchant", false);
+		BottledExp.ShowEnchant = config.getBoolean("bottle.ShowEnchant");
+		config.set("bottle.ShowEnchant", BottledExp.ShowEnchant);
+		
 		BottledExp.errAmount = Calculations.LangConfig(config, "language.errAmount", "&4The amount has to be a number!", true);
 		BottledExp.errXP = Calculations.LangConfig(config, "language.errXP", "&4You don't have enough XP!", true);
 		BottledExp.errMoney = Calculations.LangConfig(config, "language.errMoney", "&4You don't have enough money!", true);
@@ -88,6 +92,7 @@ public class Config {
 		BottledExp.moneyCost = config.getDouble("bottle.moneyCost");
 		BottledExp.useBottleMoney = config.getBoolean("bottle.useBottleMoney");
 		BottledExp.bottleCost = config.getDouble("bottle.bottleCost");
+		BottledExp.ShowEnchant = config.getBoolean("bottle.ShowEnchant");
 		BottledExp.errAmount = ChatColor.translateAlternateColorCodes('&', config.getString("language.errAmount"));
 		BottledExp.errXP = ChatColor.translateAlternateColorCodes('&', config.getString("language.errXP"));
 		BottledExp.errMoney = ChatColor.translateAlternateColorCodes('&', config.getString("language.errMoney"));

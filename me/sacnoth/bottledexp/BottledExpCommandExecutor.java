@@ -24,7 +24,7 @@ public class BottledExpCommandExecutor implements CommandExecutor {
 				int currentxp = BottledExp.getPlayerExperience(player);
 				if (args.length == 0) {
 					//statistics for player
-					String sentence = BottledExp.langCurrentXP.replace("{xp}", String.valueOf(player.getTotalExperience()));
+					String sentence = BottledExp.langCurrentXP.replace("{xp}", String.valueOf(BottledExp.getPlayerExperience(player)));
 					sentence = sentence.replace("{level}", String.valueOf(player.getLevel()));
 					
 					String sentence2 = BottledExp.langCurrentXP2.replace("{xpdelta}", String.valueOf(Calculations.currentlevelxpdelta(player)));
@@ -45,7 +45,7 @@ public class BottledExpCommandExecutor implements CommandExecutor {
 					        if (Integer.parseInt(args[1])<=player.getLevel()){					        	
 					        	sender.sendMessage(ChatColor.RED+ BottledExp.langMorethan);
 					        }else{
-					        int NeedXpToLevel=Calculations.levelToExp(Integer.parseInt(args[1]))-player.getTotalExperience();
+					        int NeedXpToLevel=Calculations.levelToExp(Integer.parseInt(args[1]))-BottledExp.getPlayerExperience(player);
 
 							String sentence = BottledExp.langUntil.replace("{xp}", String.valueOf(NeedXpToLevel));
 							sentence = sentence.replace("{bottles}", String.valueOf(Calculations.xptobottles(NeedXpToLevel)));
@@ -72,8 +72,7 @@ public class BottledExpCommandExecutor implements CommandExecutor {
 						if (BottledExp.checkPermission("bottle.max", player)) {
 							amount = (int) Math.floor(currentxp/BottledExp.xpCost);
 							if (BottledExp.settingUseItems) {
-								amount = Math.min(
-										BottledExp.countItems(player,BottledExp.settingConsumedItem)/ BottledExp.amountConsumed,amount);
+								amount = Math.min(BottledExp.countItems(player,BottledExp.settingConsumedItem)/ BottledExp.amountConsumed,amount);
 							}
 							if (BottledExp.useVaultEcon) {
 								amount = Math.min((int) Math.floor(BottledExp.getBalance(player)/ BottledExp.moneyCost), amount);
@@ -91,7 +90,7 @@ public class BottledExpCommandExecutor implements CommandExecutor {
 							return false;
 						}
 						
-					} else {
+					}  else {
 						try {
 							amount = Integer.valueOf(args[0]).intValue();
 						} catch (NumberFormatException nfe) {

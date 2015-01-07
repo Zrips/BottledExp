@@ -26,6 +26,7 @@ public class BottledExp extends JavaPlugin {
 	static boolean useVaultEcon = true;
 	static boolean useBottleMoney = true;
 	static boolean useVaultPermissions = false;
+	static boolean ShowEnchant = false;
 	static PermissionManager pexPermissions;
 	static Permission vaultPermissions;
 	static String errAmount;
@@ -115,7 +116,7 @@ public class BottledExp extends JavaPlugin {
 
 
 	public static int getPlayerExperience(Player player) {
-		int bukkitExp = player.getTotalExperience();
+		int bukkitExp = (Calculations.levelToExp(player.getLevel()) + (int) (Calculations.deltaLevelToExp(player.getLevel()) * player.getExp()));
 		return bukkitExp;
 	}
 

@@ -3,3 +3,15 @@
 /Calculations.class
 /Config.class
 /EventListener.class
+/ColorsForAnvil.class
+/AnvilColors.class
+/ColoredAnvils.class
+/ColorHandler.class
+/AnvilTask.class
+/Listeners.class
+/RepairListener.class
+/AnvilColors$AnvilGUI$AnvilClickEvent.class
+/AnvilColors$AnvilGUI$AnvilContainer.class
+/AnvilColors$AnvilGUI$AnvilSlot.class
+/AnvilColors$AnvilGUI.class
+/AnvilListener.class
