@@ -8,8 +8,6 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -27,6 +25,7 @@ public class BottledExp extends JavaPlugin {
 	static boolean useBottleMoney = true;
 	static boolean useVaultPermissions = false;
 	static boolean ShowEnchant = false;
+	static boolean UseThreeButtonEnchant = true;
 	static PermissionManager pexPermissions;
 	static Permission vaultPermissions;
 	static String errAmount;
@@ -57,9 +56,8 @@ public class BottledExp extends JavaPlugin {
 
 		myExecutor = new BottledExpCommandExecutor(this);
 		getCommand("bottle").setExecutor(myExecutor);
-		
-		getServer().getPluginManager().registerEvents(new EventListener(), this);
 
+		getServer().getPluginManager().registerEvents(new EventListener(), this);
 		config = new Config(this);
 		config.load();
 
@@ -86,7 +84,7 @@ public class BottledExp extends JavaPlugin {
 	public void onDisable() {
 		log.info("You are no longer able to fill XP into Bottles");
 	}
-	
+
 	private boolean setupPermissions() {
 		RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
 		if (permissionProvider != null) {
@@ -101,61 +99,17 @@ public class BottledExp extends JavaPlugin {
 			if (pexPermissions.has(player, node)) {
 				return true;
 			}
-			player.sendMessage(ChatColor.RED+ BottledExp.langNoperm);
+			player.sendMessage(ChatColor.RED + BottledExp.langNoperm);
 			return false;
 		} else if (useVaultPermissions && vaultPermissions.isEnabled()) {
-			if (vaultPermissions.playerHas(player.getWorld(), player.getName(),node)) {
+			if (vaultPermissions.playerHas(player.getWorld(), player.getName(), node)) {
 				return true;
 			}
-			player.sendMessage(ChatColor.RED+ BottledExp.langNoperm);
+			player.sendMessage(ChatColor.RED + BottledExp.langNoperm);
 			return false;
 		}
 		player.sendMessage(ChatColor.RED + "Neither PEX nor Vault found, BottledExp will not work properly!");
 		return false;
-	}
-
-
-	public static int getPlayerExperience(Player player) {
-		int bukkitExp = (Calculations.levelToExp(player.getLevel()) + (int) (Calculations.deltaLevelToExp(player.getLevel()) * player.getExp()));
-		return bukkitExp;
-	}
-
-	@SuppressWarnings("deprecation")
-	public static boolean checkInventory(Player player, int itemID, int amount) {
-		PlayerInventory inventory = player.getInventory();
-
-		if (inventory.contains(itemID, amount)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	@SuppressWarnings("deprecation")
-	public static boolean consumeItem(Player player, int itemID, int amount) {
-		PlayerInventory inventory = player.getInventory();
-
-		if (inventory.contains(itemID, amount)) {
-			ItemStack items = new ItemStack(itemID, amount);
-			inventory.removeItem(items);
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	@SuppressWarnings("deprecation")
-	public static int countItems(Player player, int itemID) {
-		PlayerInventory inventory = player.getInventory();
-
-		int amount = 0;
-		ItemStack curItem;
-		for (int slot = 0; slot < inventory.getSize(); slot++) {
-			curItem = inventory.getItem(slot);
-			if (curItem != null && curItem.getTypeId() == itemID)
-				amount += curItem.getAmount();
-		}
-		return amount;
 	}
 
 	private boolean setupEconomy() {

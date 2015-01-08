@@ -29,31 +29,35 @@ public class Config {
 		config.addDefault("bottle.consumedItem", 374);
 		BottledExp.settingConsumedItem = config.getInt("bottle.consumedItem");
 		config.set("bottle.consumedItem", BottledExp.settingConsumedItem);
-		
+
 		config.addDefault("bottle.amountConsumed", 1);
 		BottledExp.amountConsumed = config.getInt("bottle.amountConsumed");
 		config.set("bottle.amountConsumed", BottledExp.amountConsumed);
-		
+
 		config.addDefault("bottle.useMoney", false);
 		BottledExp.useVaultEcon = config.getBoolean("bottle.useMoney");
 		config.set("bottle.useMoney", BottledExp.useVaultEcon);
-		
+
 		config.addDefault("bottle.moneyCost", 100);
 		BottledExp.moneyCost = config.getDouble("bottle.moneyCost");
 		config.set("bottle.moneyCost", BottledExp.moneyCost);
-		
+
 		config.addDefault("bottle.useBottleMoney", false);
 		BottledExp.useBottleMoney = config.getBoolean("bottle.useBottleMoney");
 		config.set("bottle.useBottleMoney", BottledExp.useBottleMoney);
-		
+
 		config.addDefault("bottle.bottleCost", 3.25);
 		BottledExp.bottleCost = config.getDouble("bottle.bottleCost");
 		config.set("bottle.bottleCost", BottledExp.bottleCost);
-		
+
 		config.addDefault("bottle.ShowEnchant", false);
 		BottledExp.ShowEnchant = config.getBoolean("bottle.ShowEnchant");
 		config.set("bottle.ShowEnchant", BottledExp.ShowEnchant);
-		
+
+		config.addDefault("bottle.UseThreeButtonEnchant", true);
+		BottledExp.UseThreeButtonEnchant = config.getBoolean("bottle.UseThreeButtonEnchant");
+		config.set("bottle.UseThreeButtonEnchant", BottledExp.UseThreeButtonEnchant);
+
 		BottledExp.errAmount = Calculations.LangConfig(config, "language.errAmount", "&4The amount has to be a number!", true);
 		BottledExp.errXP = Calculations.LangConfig(config, "language.errXP", "&4You don't have enough XP!", true);
 		BottledExp.errMoney = Calculations.LangConfig(config, "language.errMoney", "&4You don't have enough money!", true);
@@ -70,15 +74,14 @@ public class Config {
 		BottledExp.langUntil = Calculations.LangConfig(config, "language.until", "&2You need &3{xp} &2xp or &3{bottles} &2bottles to reach &3{level} &2level", true);
 		BottledExp.langPlzuse = Calculations.LangConfig(config, "language.plzuse", "&4Plz use /bottle until [amount]", true);
 		BottledExp.langBottlecost = Calculations.LangConfig(config, "language.bottlecost", "&2This will gonna cost you &3{money}", true);
-		
-		
+
 		if (BottledExp.xpEarn > BottledExp.xpCost) {
 			BottledExp.log.warning(BottledExp.langMorexp);
 		}
 
 		plugin.saveConfig();
 	}
-	
+
 	public void reload(CommandSender sender) {
 		plugin.reloadConfig();
 		final FileConfiguration config = plugin.getConfig();
@@ -93,6 +96,7 @@ public class Config {
 		BottledExp.useBottleMoney = config.getBoolean("bottle.useBottleMoney");
 		BottledExp.bottleCost = config.getDouble("bottle.bottleCost");
 		BottledExp.ShowEnchant = config.getBoolean("bottle.ShowEnchant");
+		BottledExp.UseThreeButtonEnchant = config.getBoolean("bottle.UseThreeButtonEnchant");
 		BottledExp.errAmount = ChatColor.translateAlternateColorCodes('&', config.getString("language.errAmount"));
 		BottledExp.errXP = ChatColor.translateAlternateColorCodes('&', config.getString("language.errXP"));
 		BottledExp.errMoney = ChatColor.translateAlternateColorCodes('&', config.getString("language.errMoney"));
@@ -120,10 +124,11 @@ public class Config {
 		sender.sendMessage(ChatColor.YELLOW + "Amount used: " + BottledExp.amountConsumed);
 		sender.sendMessage(ChatColor.YELLOW + "Use money: " + BottledExp.useVaultEcon);
 
-		String sentence = BottledExp.langMoney.replace("{cost}", String.valueOf(BottledExp.moneyCost));		
+		String sentence = BottledExp.langMoney.replace("{cost}", String.valueOf(BottledExp.moneyCost));
 		sender.sendMessage(ChatColor.YELLOW + sentence);
 
 		sender.sendMessage(ChatColor.YELLOW + "Use bottle price: " + BottledExp.useBottleMoney);
 		sender.sendMessage(ChatColor.YELLOW + "Bottle price: " + BottledExp.bottleCost);
+		sender.sendMessage(ChatColor.YELLOW + "Use three button enchant: " + BottledExp.UseThreeButtonEnchant);
 	}
 }

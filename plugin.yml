@@ -1,8 +1,8 @@
 name: BottledExp
-version: 1.7.6.1
+version: 1.7.7.1
 description: Fills the player's XP into a bottle
 author: sacnoth
-website: http://www.bukkit.org
+website: http://www.spigotmc.org/resources/bottledexp.2815/
 
 main: me.sacnoth.bottledexp.BottledExp
 database: false

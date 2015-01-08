@@ -23,16 +23,44 @@ public class EventListener implements Listener {
 		if (event.isCancelled()) {
 			return;
 		}
+		int EnchantLevel;
 		Player player = event.getEnchanter();
-		int leveltoleave = player.getLevel() - (event.whichButton() + 1);
-		int levelxp = BottledExp.getPlayerExperience(player)-Calculations.levelToExp(player.getLevel());
-		float percentage = levelxp * 100/ Calculations.deltaLevelToExp(player.getLevel());
-		int newlevelpercentagexp = (int) (Calculations.deltaLevelToExp(leveltoleave) * percentage / 100);
-		int xptoleave = Calculations.levelToExp(leveltoleave)+ newlevelpercentagexp;
-		int takenxp = BottledExp.getPlayerExperience(player)- xptoleave;
+		int leveltoleave;
+		int newlevelpercentagexp;
+		double percentage;
+		int PlayerLevel = player.getLevel();
+		int levelxp;
+		int xptoleave;
+		int takenxp;
+		int getExpLevelCost = event.getExpLevelCost();
 
-		//Beta enchantment output
-		if (BottledExp.ShowEnchant){
+		if (BottledExp.UseThreeButtonEnchant) {
+			EnchantLevel = event.whichButton() + 1;
+		} else {
+			EnchantLevel = getExpLevelCost - event.whichButton() - 1;
+		}
+		leveltoleave = PlayerLevel - EnchantLevel;
+		levelxp = Calculations.getPlayerExperience(player) - Calculations.levelToExp(PlayerLevel);
+		percentage = (double) (levelxp * 100 / Calculations.deltaLevelToExp(PlayerLevel));
+		newlevelpercentagexp = (int) (Calculations.deltaLevelToExp(leveltoleave) * percentage / 100);
+		if (BottledExp.UseThreeButtonEnchant) {
+			xptoleave = Calculations.levelToExp(leveltoleave) + newlevelpercentagexp;
+			takenxp = Calculations.getPlayerExperience(player) - xptoleave;
+			// don't do anything, let Minecraft to do dirty job
+		} else {
+			xptoleave = Calculations.levelToExp(PlayerLevel - getExpLevelCost) + newlevelpercentagexp;
+			takenxp = Calculations.getPlayerExperience(player) - xptoleave;
+			player.setLevel(0);
+			player.setExp(0);
+			player.setLevel(leveltoleave);
+			player.giveExp(newlevelpercentagexp);
+			event.setExpLevelCost(0);
+		}
+		String sentence = BottledExp.langEnchant.replace("{xp}", String.valueOf(takenxp));
+		player.sendMessage(ChatColor.GREEN + sentence);
+
+		// Beta enchantment output
+		if (BottledExp.ShowEnchant) {
 			Map<Enchantment, Integer> enchantmentName = event.getEnchantsToAdd();
 			int i = event.getEnchantsToAdd().size();
 			String enchantString = "";
@@ -42,7 +70,7 @@ public class EventListener implements Listener {
 				enchantString = String.valueOf(entry.getKey());
 				Integer enchantlevel = entry.getValue();
 				enchantString = Calculations.codeCleaning(enchantString);
-				enchantString = ChatColor.DARK_GREEN +Calculations.toSentenceCase(enchantString) + ": "+ ChatColor.DARK_AQUA + enchantlevel+ ChatColor.DARK_GREEN;
+				enchantString = ChatColor.DARK_GREEN + Calculations.toSentenceCase(enchantString) + ": " + ChatColor.DARK_AQUA + enchantlevel + ChatColor.DARK_GREEN;
 				if (i >= 2)
 					enchantStringFull = enchantStringFull + enchantString + ", ";
 				else if (i >= 1)
@@ -52,13 +80,5 @@ public class EventListener implements Listener {
 			}
 			player.sendMessage(ChatColor.DARK_GREEN + enchantStringFull);
 		}
-		
-
-		String sentence = BottledExp.langEnchant.replace("{xp}",String.valueOf(takenxp));
-
-		player.sendMessage(ChatColor.GREEN + sentence);
-
-		player.setTotalExperience(xptoleave);
-		event.setExpLevelCost(0);
 	}
 }
