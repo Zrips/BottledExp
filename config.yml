@@ -21,6 +21,11 @@ bottle:
   ShowEnchant: false
 #Do you want to use new 1.8 enchant system
   UseThreeButtonEnchant: true
+  give:
+#Do you want to enable give command
+    UseGiveCommand: true
+#How much exp will be lost during trasfer in percentage
+    LostDurringTransfer: 5
 language:
   errAmount: '&4The amount has to be a number!'
   errXP: '&4You don''t have enough XP!'
@@ -35,3 +40,14 @@ language:
   enchant: '&2You have spend &3{xp} &2xp for this enchantment'
   morexp: '&4Players earn more XP through XP bottles than they cost!'
   noperm: '&4You don''t have permission to do this!'
+  give:
+    notOnline: '&4Player is not online!'
+    yourSelf: '&4You cant send exp for yourself'
+    notEnough: '&4You dont have enough exp to give'
+    plzuse: '&4Plz use /bottle give [nick] [amount]'
+    positive: '&4Plz give positive number'
+    sender: '&2You just send &3{amount} &2xp to &3{name} &2and &3{lost} &2xp was lost
+      during transfer'
+    receiver: '&2You just got &3{amount} &2xp from &3{name} &2and &3{lost} &2xp was
+      lost during transfer'
+    giveDisabled: '&4Give command is disabled!'

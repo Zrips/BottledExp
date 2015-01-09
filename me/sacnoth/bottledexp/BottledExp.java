@@ -43,7 +43,20 @@ public class BottledExp extends JavaPlugin {
 	static String langMorethan;
 	static String langUntil;
 	static String langPlzuse;
+	static String langGivePlzUse;
 	static String langBottlecost;
+
+	static boolean UseGiveCommand = true;
+	static int LostDurringTransfer;
+	static String langGiveDisabled;
+	static String langnotOnline;
+	static String langyourSelf;
+	static String langnotEnough;
+	static String langplzuse;
+	static String langpositive;
+	static String langsender;
+	static String langreceiver;
+	
 	static boolean settingUseItems;
 	static int settingConsumedItem;
 	static int amountConsumed;

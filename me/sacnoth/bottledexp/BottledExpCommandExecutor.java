@@ -2,6 +2,7 @@ package me.sacnoth.bottledexp;
 
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,6 +16,7 @@ public class BottledExpCommandExecutor implements CommandExecutor {
 	public BottledExpCommandExecutor(BottledExp plugin) {
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		if ((sender instanceof Player)) {
@@ -61,6 +63,63 @@ public class BottledExpCommandExecutor implements CommandExecutor {
 							return true;
 						} catch (NumberFormatException nfe) {
 							sender.sendMessage(ChatColor.RED + BottledExp.langPlzuse);
+						}
+					} else {
+						return true;
+					}
+				} else if (args.length == 3) { // give argument output
+					if (args[0].equals("give")) {
+						if (!BottledExp.UseGiveCommand){
+							sender.sendMessage(ChatColor.RED + BottledExp.langGiveDisabled);
+						}else{
+						if (BottledExp.checkPermission("bottle.give", player)) {
+							if (Bukkit.getPlayerExact(args[1]) != null) {
+								Player receiver = Bukkit.getPlayerExact(args[1]);
+								if (player == receiver) {
+									sender.sendMessage(ChatColor.RED + BottledExp.langyourSelf);
+								} else {
+									try {
+										Integer.parseInt(args[2]);
+										if (Integer.parseInt(args[2]) > Calculations.getPlayerExperience(player)) {
+											sender.sendMessage(ChatColor.RED + BottledExp.langnotEnough);
+										} else {
+											if (Integer.parseInt(args[2]) <= 0) {
+												sender.sendMessage(ChatColor.RED + BottledExp.langpositive);
+											} else {
+												int giverExp = Calculations.getPlayerExperience(player) - Integer.parseInt(args[2]);
+												int expToReceive= ((Integer.parseInt(args[2]) * (100 - BottledExp.LostDurringTransfer)) / 100);
+												int lostExp= Integer.parseInt(args[2]) - expToReceive;
+												int receiversExp = Calculations.getPlayerExperience(receiver) + expToReceive;
+
+												player.setLevel(0);
+												player.setExp(0);
+												player.giveExp(giverExp);
+
+												receiver.setLevel(0);
+												receiver.setExp(0);
+												receiver.giveExp(receiversExp);
+
+												String SenderSentence = BottledExp.langsender.replace("{amount}", String.valueOf(args[2]));
+												SenderSentence = SenderSentence.replace("{name}", receiver.getName());	
+												SenderSentence = SenderSentence.replace("{lost}", String.valueOf(lostExp));																	
+												player.sendMessage(ChatColor.DARK_GREEN + SenderSentence);
+
+
+												String ReceiverSentence = BottledExp.langreceiver.replace("{amount}", String.valueOf(expToReceive));
+												ReceiverSentence = ReceiverSentence.replace("{name}", sender.getName());	
+												ReceiverSentence = ReceiverSentence.replace("{lost}", String.valueOf(lostExp));				
+												receiver.sendMessage(ChatColor.DARK_GREEN + ReceiverSentence);
+											}
+										}
+										return true;
+									} catch (NumberFormatException nfe) {
+										sender.sendMessage(ChatColor.RED + BottledExp.langGivePlzUse);
+									}
+								}
+							} else {
+								player.sendMessage(ChatColor.RED + BottledExp.langnotOnline);
+							}
+						}
 						}
 					} else {
 						return true;
@@ -135,7 +194,6 @@ public class BottledExpCommandExecutor implements CommandExecutor {
 					}
 
 					PlayerInventory inventory = player.getInventory();
-					@SuppressWarnings("deprecation")
 					ItemStack items = new ItemStack(384, amount);
 					HashMap<Integer, ItemStack> leftoverItems = inventory.addItem(items);
 					player.setTotalExperience(0);
