@@ -58,8 +58,14 @@ public class BottledExp extends JavaPlugin {
 	static String langreceiver;
 	
 	static boolean settingUseItems;
+	static boolean BlockInteractionUse;
+	static boolean BlockInteractionUseRightClick;
 	static int settingConsumedItem;
 	static int amountConsumed;
+	static int BlockInteractionBlockId;
+	static int BlockInteractionHandItemId;
+	static int BlockInteractionGiveEveryTime;
+	static int BlockInteractionMultiplayer;
 	static double moneyCost;
 	static Config config;
 	public static Economy economy = null;

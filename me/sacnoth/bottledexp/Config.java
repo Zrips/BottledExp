@@ -10,7 +10,7 @@ public class Config {
 	public Config(BottledExp plugin) {
 		this.plugin = plugin;
 	}
-
+		
 	public void load() {
 		final FileConfiguration config = plugin.getConfig();
 
@@ -66,6 +66,30 @@ public class Config {
 		BottledExp.LostDurringTransfer = config.getInt("bottle.give.LostDurringTransfer");
 		config.set("bottle.give.LostDurringTransfer", BottledExp.LostDurringTransfer);
 
+		config.addDefault("bottle.BlockInteraction.Use", false);
+		BottledExp.BlockInteractionUse = config.getBoolean("bottle.BlockInteraction.Use");
+		config.set("bottle.BlockInteraction.Use", BottledExp.BlockInteractionUse);
+		
+		config.addDefault("bottle.BlockInteraction.UseRightClick", false);
+		BottledExp.BlockInteractionUseRightClick = config.getBoolean("bottle.BlockInteraction.UseRightClick");
+		config.set("bottle.BlockInteraction.UseRightClick", BottledExp.BlockInteractionUseRightClick);
+		
+		config.addDefault("bottle.BlockInteraction.BlockId", 116);
+		BottledExp.BlockInteractionBlockId = config.getInt("bottle.BlockInteraction.BlockId");
+		config.set("bottle.BlockInteraction.BlockId", BottledExp.BlockInteractionBlockId);
+		
+		config.addDefault("bottle.BlockInteraction.HandItemId", 374);
+		BottledExp.BlockInteractionHandItemId = config.getInt("bottle.BlockInteraction.HandItemId");
+		config.set("bottle.BlockInteraction.HandItemId", BottledExp.BlockInteractionHandItemId);
+		
+		config.addDefault("bottle.BlockInteraction.GiveEveryTime", 1);
+		BottledExp.BlockInteractionGiveEveryTime = config.getInt("bottle.BlockInteraction.GiveEveryTime");
+		config.set("bottle.BlockInteraction.GiveEveryTime", BottledExp.BlockInteractionGiveEveryTime);
+		
+		config.addDefault("bottle.BlockInteraction.Multiplayer", 10);
+		BottledExp.BlockInteractionMultiplayer = config.getInt("bottle.BlockInteraction.Multiplayer");
+		config.set("bottle.BlockInteraction.Multiplayer", BottledExp.BlockInteractionMultiplayer);
+
 		BottledExp.errAmount = Calculations.LangConfig(config, "language.errAmount", "&4The amount has to be a number!", true);
 		BottledExp.errXP = Calculations.LangConfig(config, "language.errXP", "&4You don't have enough XP!", true);
 		BottledExp.errMoney = Calculations.LangConfig(config, "language.errMoney", "&4You don't have enough money!", true);
@@ -115,6 +139,12 @@ public class Config {
 		BottledExp.bottleCost = config.getDouble("bottle.bottleCost");
 		BottledExp.ShowEnchant = config.getBoolean("bottle.ShowEnchant");
 		BottledExp.UseThreeButtonEnchant = config.getBoolean("bottle.UseThreeButtonEnchant");
+		BottledExp.BlockInteractionUse = config.getBoolean("bottle.BlockInteraction.Use");
+		BottledExp.BlockInteractionUseRightClick = config.getBoolean("bottle.BlockInteraction.UseRightClick");
+		BottledExp.BlockInteractionBlockId = config.getInt("bottle.BlockInteraction.BlockId");
+		BottledExp.BlockInteractionHandItemId = config.getInt("bottle.BlockInteraction.HandItemId");
+		BottledExp.BlockInteractionGiveEveryTime = config.getInt("bottle.BlockInteraction.GiveEveryTime");
+		BottledExp.BlockInteractionMultiplayer = config.getInt("bottle.BlockInteraction.Multiplayer");
 		BottledExp.errAmount = ChatColor.translateAlternateColorCodes('&', config.getString("language.errAmount"));
 		BottledExp.errXP = ChatColor.translateAlternateColorCodes('&', config.getString("language.errXP"));
 		BottledExp.errMoney = ChatColor.translateAlternateColorCodes('&', config.getString("language.errMoney"));
@@ -161,4 +191,5 @@ public class Config {
 		sender.sendMessage(ChatColor.YELLOW + "Bottle price: " + BottledExp.bottleCost);
 		sender.sendMessage(ChatColor.YELLOW + "Use three button enchant: " + BottledExp.UseThreeButtonEnchant);
 	}
+
 }

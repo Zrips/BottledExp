@@ -1,31 +1,44 @@
+# xpCost - How much player will spend converting his xp to bottles
+# xpEarn - How much player will get xp from xp bottle
+# useItems - Do you want to use custom items when converting xp to xp bottles
+# consumedItem - Id for custom item, by default its empty glass bottle
+# amountConsumed - How many to consume when converting. This is for every bottle you will get
+# useMoney - Do you want to charge money for xp conversion
+# moneyCost - How much it will gonna cost
+# useBottleMoney - Do you want to show extra information for how much its gonna cost to level up
+# bottleCost - How much one xp bottle costs
+# ShowEnchant - Do you want to show all enchantments player gets after enchanting item
+# UseThreeButtonEnchant - Do you want to use new 1.8 enchant system
+# UseGiveCommand - Do you want to enable give command
+# LostDurringTransfer - How much exp will be lost during trasfer in percentage
+# UseRightClick - Do you want to use right click, if false then left will be used, good for block with interactions like enchant table
+# BlockId - Id of block will be used to convert xp to bottles
+# HandItemId - Id of item in hand when you want to convert xp by clicking block
+# GiveEveryTime - How many bottles to give everytime
+# Multiplayer - How many times to multiply given bottles by clicking shift
+
 bottle:
-#How much player will spend converting his xp to bottles
   xpCost: 10
-#How much player will get xp from xp bottle
   xpEarn: 10
-#Do you want to use custom items when converting xp to xp bottles
   useItems: false
-#Id for custom item, by default its empty glass bottle
   consumedItem: 374
-#How many to consume when converting. This is for every bottle you will get
   amountConsumed: 1
-#Do you want to charge money for xp conversion
   useMoney: false
-#How much it will gonna cost
   moneyCost: 100.0
-#Do you want to show extra information for how much its gonna cost to level up
   useBottleMoney: false
-#How much one xp bottle costs
   bottleCost: 3.25
-#Do you want to show all enchantments player gets after enchanting item
   ShowEnchant: false
-#Do you want to use new 1.8 enchant system
   UseThreeButtonEnchant: true
   give:
-#Do you want to enable give command
-    UseGiveCommand: true
-#How much exp will be lost during trasfer in percentage
-    LostDurringTransfer: 5
+    UseGiveCommand: false
+    LostDurringTransfer: 0
+  BlockInteraction:
+    Use: false
+    UseRightClick: false
+    BlockId: 116
+    HandItemId: 374
+    GiveEveryTime: 1
+    Multiplayer: 10
 language:
   errAmount: '&4The amount has to be a number!'
   errXP: '&4You don''t have enough XP!'
