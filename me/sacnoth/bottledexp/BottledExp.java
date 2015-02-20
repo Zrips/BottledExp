@@ -17,8 +17,6 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 public class BottledExp extends JavaPlugin {
 	static Logger log;
 	private BottledExpCommandExecutor myExecutor;
-	static int xpCost;
-	static int xpEarn;
 	static double bottleCost;
 	static boolean usePermissions = false;
 	static boolean useVaultEcon = true;
@@ -28,46 +26,21 @@ public class BottledExp extends JavaPlugin {
 	static boolean UseThreeButtonEnchant = true;
 	static PermissionManager pexPermissions;
 	static Permission vaultPermissions;
-	static String errAmount;
-	static String errXP;
-	static String errMoney;
-	static String langCurrentXP;
-	static String langCurrentXP2;
-	static String langOrder;
-	static String langRefund;
-	static String langItemConsumer;
-	static String langMoney;
-	static String langEnchant;
-	static String langMorexp;
-	static String langNoperm;
-	static String langMorethan;
-	static String langUntil;
-	static String langPlzuse;
-	static String langGivePlzUse;
-	static String langBottlecost;
-
+	static String errAmount, errXP, errMoney, langCurrentXP, langCurrentXP2,
+			langOrder, langRefund, langItemConsumer, langMoney, langEnchant,
+			langMorexp, langNoperm, langMorethan, langUntil, langPlzuse,
+			langGivePlzUse, langBottlecost, langGiveDisabled, langnotOnline,
+			langyourSelf, langnotEnough, langplzuse, langpositive, langsender,
+			langreceiver;
 	static boolean UseGiveCommand = true;
-	static int LostDurringTransfer;
-	static String langGiveDisabled;
-	static String langnotOnline;
-	static String langyourSelf;
-	static String langnotEnough;
-	static String langplzuse;
-	static String langpositive;
-	static String langsender;
-	static String langreceiver;
-	
-	static boolean settingUseItems;
-	static boolean BlockInteractionUse;
-	static boolean BlockInteractionUseRightClick;
-	static int settingConsumedItem;
-	static int amountConsumed;
-	static int BlockInteractionBlockId;
-	static int BlockInteractionHandItemId;
-	static int BlockInteractionGiveEveryTime;
-	static int BlockInteractionMultiplayer;
+	static boolean settingUseItems, BlockInteractionUse,
+			BlockInteractionUseRightClick;
+	static int settingConsumedItem, amountConsumed, BlockInteractionBlockId,
+			BlockInteractionHandItemId, BlockInteractionGiveEveryTime,
+			BlockInteractionMultiplayer, LostDurringTransfer, xpCost, xpEarn;
 	static double moneyCost;
 	static Config config;
+	static Recipes Recipes;
 	public static Economy economy = null;
 
 	public void onEnable() {
@@ -79,7 +52,10 @@ public class BottledExp extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new EventListener(), this);
 		config = new Config(this);
 		config.load();
-
+		
+		Recipes = new Recipes(this);
+		Recipes.Recipe();
+		
 		if (!setupEconomy()) {
 			log.info("Vault not found - Disabeling economy capabilities.");
 			useVaultEcon = false;
