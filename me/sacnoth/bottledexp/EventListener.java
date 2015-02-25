@@ -3,7 +3,6 @@ package me.sacnoth.bottledexp;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -12,29 +11,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.ExpBottleEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 
 public class EventListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onExpBottleEvent(ExpBottleEvent event) {
 		event.setExperience(BottledExp.xpEarn);
-	}
-
-	@SuppressWarnings("deprecation")
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onEnchantItem(PlayerInteractEvent event) {
-		if (BottledExp.BlockInteractionUse) {
-			String click = "RIGHT_CLICK_BLOCK";
-			if (!BottledExp.BlockInteractionUseRightClick)
-				click = "LEFT_CLICK_BLOCK";
-			if (event.getPlayer().isSneaking() && event.getAction().toString().equalsIgnoreCase(click) && event.getClickedBlock().getTypeId() == BottledExp.BlockInteractionBlockId && event.getPlayer().getItemInHand().getTypeId() == BottledExp.BlockInteractionHandItemId) {
-				Player player = event.getPlayer();
-				Bukkit.dispatchCommand(player, "bottle " + (BottledExp.BlockInteractionGiveEveryTime * BottledExp.BlockInteractionMultiplayer));
-			}else if (event.getAction().toString().equalsIgnoreCase(click) && event.getClickedBlock().getTypeId() == BottledExp.BlockInteractionBlockId && event.getPlayer().getItemInHand().getTypeId() == BottledExp.BlockInteractionHandItemId) {
-				Player player = event.getPlayer();
-				Bukkit.dispatchCommand(player, "bottle " + BottledExp.BlockInteractionGiveEveryTime);
-			}
-		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)

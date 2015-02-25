@@ -49,13 +49,18 @@ public class BottledExp extends JavaPlugin {
 		myExecutor = new BottledExpCommandExecutor(this);
 		getCommand("bottle").setExecutor(myExecutor);
 
-		getServer().getPluginManager().registerEvents(new EventListener(), this);
 		config = new Config(this);
 		config.load();
-		
+
 		Recipes = new Recipes(this);
 		Recipes.Recipe();
+
+		getServer().getPluginManager().registerEvents(new EventListener(), this);
 		
+		//If its enabled then register event listener (Saves servers resources)
+		if (BottledExp.BlockInteractionUse)
+			getServer().getPluginManager().registerEvents(new BlockInteractionEvent(), this);
+
 		if (!setupEconomy()) {
 			log.info("Vault not found - Disabeling economy capabilities.");
 			useVaultEcon = false;
