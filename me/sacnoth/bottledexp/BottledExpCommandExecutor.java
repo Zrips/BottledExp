@@ -23,7 +23,7 @@ public class BottledExpCommandExecutor implements CommandExecutor {
 			Player player = (Player) sender;
 
 			if (cmd.getName().equalsIgnoreCase("bottle") && BottledExp.checkPermission("bottle.use", player)) {
-				int currentxp = Calculations.getPlayerExperience(player);
+				int currentxp = Calculations.getPlayerExperience(player);				
 				if (args.length == 0) {
 					// statistics for player
 					String sentence = BottledExp.langCurrentXP.replace("{xp}", String.valueOf(Calculations.getPlayerExperience(player)));
@@ -149,11 +149,13 @@ public class BottledExpCommandExecutor implements CommandExecutor {
 						}
 
 					} else {
-						try {
-							amount = Integer.valueOf(args[0]).intValue();
-						} catch (NumberFormatException nfe) {
-							sender.sendMessage(ChatColor.RED + BottledExp.errAmount);
-							// return false;
+						if (BottledExp.checkPermission("bottle.amount", player)) {
+							try {
+								amount = Integer.valueOf(args[0]).intValue();
+							} catch (NumberFormatException nfe) {
+								sender.sendMessage(ChatColor.RED + BottledExp.errAmount);
+								return false;
+							}
 						}
 					}
 					if (currentxp < amount * BottledExp.xpCost) {
@@ -168,9 +170,7 @@ public class BottledExpCommandExecutor implements CommandExecutor {
 					}
 
 					boolean money = false;
-					if (BottledExp.useVaultEcon) // Check if the player has
-													// enough
-													// money
+					if (BottledExp.useVaultEcon) // Check if the player has enough money
 					{
 
 						if (BottledExp.getBalance(player) > BottledExp.moneyCost * amount) {
@@ -182,8 +182,7 @@ public class BottledExpCommandExecutor implements CommandExecutor {
 					}
 
 					boolean consumeItems = false;
-					if (BottledExp.settingUseItems) // Check if the player has
-													// enough items
+					if (BottledExp.settingUseItems) // Check if the player has enough items
 					{
 						consumeItems = Calculations.checkInventory(player, BottledExp.settingConsumedItem, amount * BottledExp.amountConsumed);
 						if (!consumeItems) {
@@ -199,6 +198,7 @@ public class BottledExpCommandExecutor implements CommandExecutor {
 					player.setLevel(0);
 					player.setExp(0);
 					player.giveExp(currentxp - (amount * BottledExp.xpCost));
+
 					if (leftoverItems.containsKey(0)) {
 						int refundAmount = leftoverItems.get(0).getAmount();
 						player.giveExp(refundAmount * BottledExp.xpCost);

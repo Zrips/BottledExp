@@ -1,5 +1,6 @@
 package me.sacnoth.bottledexp;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -7,48 +8,59 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 public class Calculations {
+	private static String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 
 	// config file Language management
 	public static String LangConfig(FileConfiguration fileConfig, String configValue, String text, boolean colorize) {
 		fileConfig.addDefault(configValue, text); // adding default values
-		String langVariable = fileConfig.getString(configValue); // Getting
-																	// value
-																	// from
-																	// config
-																	// file
+		String langVariable = fileConfig.getString(configValue); // Getting value from config file
 		if (colorize) {
-			text = ChatColor.translateAlternateColorCodes('&', langVariable); // Making
-																				// colored
-																				// text
+			text = ChatColor.translateAlternateColorCodes('&', langVariable); // Making colored text
 		}
-		fileConfig.set(configValue, langVariable); // Writing values to config
-													// file
+		fileConfig.set(configValue, langVariable); // Writing values to config file
 		return text;
 	}
 
 	// total xp calculation based by lvl
 	public static int levelToExp(int level) {
-		int totalxp = 0;
-		if (level <= 15) {
-			totalxp = (int) (level * level + 6 * level);
-			return totalxp;
-		} else if (level <= 30) {
-			totalxp = (int) (2.5 * level * level - 40.5 * level + 360);
-			return totalxp;
+		if (version.contains("1_7")) {
+			if (level <= 15) {
+				return 17 * level;
+			} else if (level <= 30) {
+				return (3 * level * level / 2) - (59 * level / 2) + 360;
+			} else {
+				return (7 * level * level / 2) - (303 * level / 2) + 2220;
+			}
 		} else {
-			totalxp = (int) (4.5 * level * level - 162.5 * level + 2220);
-			return totalxp;
+			if (level <= 15) {
+				return (int) (level * level + 6 * level);
+			} else if (level <= 30) {
+				return (int) (2.5 * level * level - 40.5 * level + 360);
+			} else {
+				return (int) (4.5 * level * level - 162.5 * level + 2220);
+			}
 		}
+
 	}
 
 	// xp calculation for one current lvl
 	public static int deltaLevelToExp(int level) {
-		if (level <= 15) {
-			return 2 * level + 7;
-		} else if (level <= 30) {
-			return 5 * level - 38;
+		if (version.contains("1_7")) {
+			if (level <= 15) {
+				return 17;
+			} else if (level <= 30) {
+				return 3 * level - 31;
+			} else {
+				return 7 * level - 155;
+			}
 		} else {
-			return 9 * level - 158;
+			if (level <= 15) {
+				return 2 * level + 7;
+			} else if (level <= 30) {
+				return 5 * level - 38;
+			} else {
+				return 9 * level - 158;
+			}
 		}
 	}
 
