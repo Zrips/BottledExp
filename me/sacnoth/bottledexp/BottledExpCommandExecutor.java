@@ -93,10 +93,12 @@ public class BottledExpCommandExecutor implements CommandExecutor {
 
 													player.setLevel(0);
 													player.setExp(0);
+													player.setTotalExperience(0);
 													player.giveExp(giverExp);
 
 													receiver.setLevel(0);
 													receiver.setExp(0);
+													receiver.setTotalExperience(0);
 													receiver.giveExp(receiversExp);
 
 													String SenderSentence = BottledExp.langsender.replace("{amount}", String.valueOf(args[2]));
@@ -197,6 +199,7 @@ public class BottledExpCommandExecutor implements CommandExecutor {
 					player.setTotalExperience(0);
 					player.setLevel(0);
 					player.setExp(0);
+					player.setTotalExperience(0);
 					player.giveExp(currentxp - (amount * BottledExp.xpCost));
 
 					if (leftoverItems.containsKey(0)) {

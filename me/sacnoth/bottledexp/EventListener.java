@@ -52,6 +52,7 @@ public class EventListener implements Listener {
 			takenxp = Calculations.getPlayerExperience(player) - xptoleave;
 			player.setLevel(0);
 			player.setExp(0);
+			player.setTotalExperience(0);
 			player.setLevel(leveltoleave);
 			player.giveExp(newlevelpercentagexp);
 			event.setExpLevelCost(0);
