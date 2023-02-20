@@ -1,0 +1,32 @@
+# You can setup specific recipe to craft items (exp bottles for example) to define recipe just write item id and if you need meta date separated with ":" (ex. 35:15 will be black wool). You can chose you want shaped recipe or shapless
+Recipes:
+  '1':
+    Enabled: false
+    ResultId: 384
+    Meta: 0 
+    ResultAmount: 100
+    ShapedRecipe: true
+    Recipe:
+    - 57,57,57
+    - 57,374,57
+    - 57,57,57
+  '2':
+    Enabled: false
+    ResultId: 384
+    Meta: 0 
+    ResultAmount: 1
+    ShapedRecipe: false
+    Recipe:
+    - 0,0,0
+    - 0,264,0
+    - 0,0,0
+  '3':
+    Enabled: false
+    ResultId: 384
+    Meta: 0
+    ResultAmount: 1
+    ShapedRecipe: false
+    Recipe:
+    - 0,0,0
+    - 0,397:4,0
+    - 0,0,0

@@ -1,0 +1,56 @@
+name: BottledExp
+version: 3.1.2.0
+description: "Fills the player's XP into a bottle"
+author: Zrips
+api-version: 1.13
+depend: [CMILib]
+website: https://www.spigotmc.org/resources/bottledexp.2815/
+
+main: me.Zrips.bottledexp.BottledExp
+database: false
+softdepend: [PermissionsEx, Vault]
+
+commands:
+   bottle:
+      description: Fills XP into a bottle.
+permissions:
+  bottledexp.*:
+    description: Grants access to all bottledexp commands
+    children:
+      bottledexp.admin: true
+  bottledexp.admin:
+    description: Grants permissions as an admin
+    default: false
+    children:
+      bottledexp.command.*: true
+  bottledexp.command.*:
+    description: Grants player access to all commands
+    default: false
+    children:
+      bottledexp.command.stats: true
+      bottledexp.command.stats.others: true
+      bottledexp.command.until: true
+      bottledexp.command.get: true
+      bottledexp.command.get.max: true
+      bottledexp.command.give: true
+  bottledexp.command.stats:
+    default: true
+  bottledexp.command.stats.others:
+    default: op
+  bottledexp.command.until:
+    default: true
+  bottledexp.command.get:
+    default: true
+  bottledexp.command.store:
+    default: true
+  bottledexp.command.get.max:
+    default: true
+  bottledexp.command.store:
+    default: true
+  bottledexp.command.store.max:
+    default: true
+  bottledexp.command.give:
+    default: op
+  bottledexp.expcontainer.craft:
+    default: op
+    

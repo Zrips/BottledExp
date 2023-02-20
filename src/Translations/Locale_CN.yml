@@ -1,0 +1,69 @@
+Prefix: '&e[&a瓶装经验&e] '
+Nopermission: '&4权限不足，无法执行！'
+NoPlayer: '&4无法找到匹配该名称的玩家！'
+MoreThanZero: '&4数值必须大于 0'
+Self: '&4你无法将经验递送至自己！'
+Reload: '&e配置文件已重载！'
+Enchant: '&2本次附魔花费了 &3[xp]&2 点经验'
+GotExp: '&2你获得了 &3[xp]&2 点经验'
+Store:
+  Name: '&6|   瓶装经验   |'
+  Lore: '&e已存储经验：'
+  ExpLoreColor: '&6'
+command:
+  help:
+    output:
+      usage: '&e用法：&6%usage%'
+      title: '&2----&e ==== &6瓶装经验&e ==== &2----'
+  stats:
+    help:
+      info: '&2查看指定玩家的经验详情'
+      args: '&3（玩家名称）'
+    info:
+      feedback:
+      - '&2你当前拥有 &3[xp] &2点经验，经验等级为 &3[level]&2！'
+      - '&2距下一个经验等级还需 &3[xpdelta] &2点经验或 &3[bottles] &2个附魔之瓶！'
+      Moneyfeedback: '&2执行该命令将花费 &3[money]'
+  until:
+    help:
+      info: '&2查看当前等级与目标等级间相差的经验点数与所需的附魔之瓶数量'
+      args: '[目标等级]'
+    info:
+      moreThan: '&4目标等级必须高于当前等级！'
+      feedback: '&2距 &3[level]&2 级还需 &3[xp] &2点经验或 &3[bottles] &2个附魔之瓶！'
+      Moneyfeedback: '&2执行该命令将花费 &3[money]'
+  give:
+    help:
+      info: '&2将经验递送给其他玩家'
+      args: '[玩家名称] [经验点数]'
+    info:
+      noExp: '&4经验不足，无法递送！'
+      sender: '&2已将 &3[amount] &2点经验递送给 &3[name] &2，&3[lost] &2点经验遭到流失'
+      receiver: '&2已收取来自 &3[name] &2的 &3[amount] &2点经验，&3[lost] &2点经验遭到流失'
+  eblock:
+    help:
+      info: '&2将目视的方块创建为自定义经验交换方块'
+      args: ''
+    info:
+      created: '&6已创建'
+      removed: '&e已移除'
+  reload:
+    help:
+      info: '&2重载配置文件'
+      args: ''
+  get:
+    help:
+      info: '&2将经验转化为附魔之瓶'
+      args: '[经验点数/max]'
+    info:
+      noExp: '&4经验不足，无法转化'
+      NoMoney: '&4余额不足，无法转化！'
+      NoItems: '&4物品不足，无法转化！'
+      Cost: '&e转化花费：&3[cost]'
+      Order: '&2已将指定经验值转化为 &3[bottles] &2个附魔之瓶！'
+  store:
+    help:
+      info: '&2将指定点数的经验装入瓶中'
+      args: '[经验点数/经验级数L/max]'
+    info:
+      converted: '&2已将 &3[exp] &2点经验装入瓶中！'

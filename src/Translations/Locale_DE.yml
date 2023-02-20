@@ -1,0 +1,67 @@
+Prefix: '&e[&aBottledExp&e] '
+Nopermission: '&4Du hast keine Rechte für das!'
+NoPlayer: '&4Es gibt keinen Spieler mit diesem Namen!'
+MoreThanZero: '&4Bitte gib eine größere Nummer als 0 ein'
+Self: '&4Du kannst dir nicht selbst XP schicken!'
+Reload: '&eEinstellungsdokument wurde aktualisiert!'
+Enchant: '&2Du hast &3[xp] &2XP für diese Verzauberung ausgegeben'
+GotExp: '&2Du hast &3[xp] &2XP erhalten'
+Store:
+  Name: '&6|   BottledExp   |'
+  Lore: '&eGespeicherte XP:'
+  ExpLoreColor: '&6'
+command:
+  help:
+    output:
+      usage: '&eUsage: &6%usage%'
+      title: '&2----&e ==== &6BottledExp &e==== &2----'
+  stats:
+    help:
+      info: '&2Überprüfe deine XP Informationen'
+      args: '&3(Spielername)'
+    info:
+      feedback:
+      - '&2Du hast derzeit &3[xp] &2XP und du bist derzeit auf LV: &3[level]&2!'
+      - '&2Du benötigst noch &3[xpdelta] &2XP oder &3[bottles] &2Fläschchen für das nächste Level!'
+      Moneyfeedback: '&2Das wird dich &3[money] &2kosten.'
+  until:
+    help:
+      info: '&2Überprüfe, wie viele Fläschchen du benötigst, um das Level zu erreichen'
+      args: '[level]'
+    info:
+      moreThan: '&4Dies sollte mehr als dein Level sein!'
+      feedback: '&2Du brauchst &3[xp] &2XP oder &3[bottles] &2Fläschchen, für Level &3[level]
+        &2level'
+      Moneyfeedback: '&2Das wird dich &3[money] &2kosten'
+  give:
+    help:
+      info: '&2Gib einem anderen Spieler XP'
+      args: '[Spielername] [exp]'
+    info:
+      noExp: '&4Du hast nicht genug XP um zu geben'
+      sender: '&2Du hast gerade &3[amount] &2XP zu &3[name] &2geschickt &2und &3[lost] &2XP sind
+        durch den Transfer verloren gegangen'
+      receiver: '&2Du hast gerade &3[amount] &2XP von &3[name] &2erhalten und &3[lost] &2XP
+        sind durch den Transfer verloren gegangen'
+  eblock:
+    help:
+      info: '&2Erstellt einen benutzerdefinierten XP-Austauschblock, den du gerade ansiehst'
+      args: ''
+    info:
+      created: '&6Erstellt'
+      removed: '&eEntfernt'
+  reload:
+    help:
+      info: '&2Aktualisiert Config Datei'
+      args: ''
+  get:
+    help:
+      info: '&2Tausche XP in Erfahrungsfläschchen'
+      args: '[Anzahl] oder Max.'
+    info:
+      noExp: '&4Du hast nicht genügend XP'
+      NoMoney: '&4Du hast nicht genug Geld!'
+      NoItems: '&4Du hast nicht genügend Items!'
+      Refund: '&2Rückerstattung ausgestellt! Summe: &3[amount]'
+      Cost: '&eTransaktionsgebühr: &3[cost]'
+      Order: '&2Du hast: &3[bottles] &2Fläschchen bestellt!'
