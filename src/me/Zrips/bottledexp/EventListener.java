@@ -196,36 +196,16 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onExpBottleThrow(PlayerInteractEvent event) {
 
-//	if (!ConfigFile.CraftExpContainer)
-//	    return;
+        if(event.getAction().equals(Action.PHYSICAL))
+            return;
 
         Player player = event.getPlayer();
 
-        boolean mainHand = true;
+        boolean mainHand = Objects.equals(event.getHand(), EquipmentSlot.HAND);
+        ItemStack item = event.getItem();
 
-        ItemStack item = CMIItemStack.getItemInMainHand(player);
-
-        if (item == null || CMIMaterial.isAir(item.getType())) {
-
-            try {
-                if (event.getHand().equals(EquipmentSlot.HAND))
-                    return;
-            } catch (Throwable e) {
-            }
-
-            mainHand = false;
-            item = CMIItemStack.getItemInOffHand(player);
-            if (item == null)
-                return;
-        } else {
-            try {
-                if (event.getHand().equals(EquipmentSlot.OFF_HAND))
-                    return;
-                
-            } catch (Throwable e) {
-            }
-        }
-
+        if(item == null || !item.getType().equals(Material.EXPERIENCE_BOTTLE))
+            return;
         int exp = 0;
 
         CMINBT nbt = new CMINBT(item);
