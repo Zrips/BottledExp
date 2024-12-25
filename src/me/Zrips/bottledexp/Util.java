@@ -77,7 +77,7 @@ public class Util extends BottledExp {
 
 	boolean consumeItems = false;
 	if (ConfigFile.settingUseItems) {
-	    consumeItems = Calculations.checkInventory(player, ConfigFile.settingConsumedItem, 1);
+	    consumeItems = Calculations.checkInventory(player, ConfigFile.settingConsumedItem, ConfigFile.amountConsumed);
 	    if (!consumeItems) {
 		player.sendMessage(Language.getMessage("command.get.info.NoItems"));
 		return;
