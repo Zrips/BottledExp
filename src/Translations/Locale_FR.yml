@@ -1,0 +1,79 @@
+Prefix: '&e[&aBottle&e] '
+Self: '&4Tu ne peux t''envoyer de l''xp!'
+Reload: '&eFichiers de configuration rechargés!'
+Enchant: '&2Tu as dépensé &3[xp] &2xp pour cet enchantement'
+GotExp: '&2Tu as reçu &3[xp] &2xp'
+Store:
+  Name: '&6| Bouteille d''xp |'
+  BottleLore: '&eXP stockée: &6[exp]'
+  ExpLoreColor: '&6'
+command:
+  help:
+    output:
+      usage: '&eUtilisation: &6%usage%'
+      cmdInfoFormat: '[command] &f- &e[description]'
+      cmdFormat: '&6/[command] &f[arguments]'
+      helpPageDescription: '&e* [description]'
+      title: '&2----&e ==== &6Bottle &e==== &2----'
+  stats:
+    help:
+      info: '&2Vérifie tes informations XP'
+      args: '&3(nomDuJoueur)'
+    info:
+      feedback:
+      - '&2Tu as &3[xp] &2xp et tu es niveau &3[level]&2!'
+      - '&2Il te manque &3[xpdelta] &2xp ou &3[bottles] &2bouteilles pour atteindre
+        le prochain niveau!'
+      Moneyfeedback: '&2Ca te coûtera &3[money]'
+  until:
+    help:
+      info: '&2Vérifie combien de bouteilles tu as besoin pour atteindre le niveau'
+      args: '[niveau]'
+    info:
+      moreThan: '&4Ca devrait être plus que ton niveau!'
+      feedback: '&2Il te manque &3[xp] &2xp ou &3[bottles] &2bouteilles pour atteindre
+        le niveau &3[level]'
+      Moneyfeedback: '&2Ca te coûtera &3[money]'
+  give:
+    help:
+      info: '&2Donne de l''xp à un autre joueur'
+      args: '[nomDuJoueur] [exp]'
+    info:
+      noExp: '&4Tu n''as pas assez d''xp pour donner'
+      sender: '&2Tu as envoyé &3[amount] &2xp à &3[name] &2et &3[lost] &2xp ont été
+        perdu pendant le transfert'
+      receiver: '&2Tu as reçu &3[amount] &2xp de &3[name] &2et &3[lost] &2xp ont été
+        perdues pendant le trasnfert'
+  eblock:
+    help:
+      info: '&2Crée un bloc d''échange d''xp personnalisé, lequel tu regardes'
+      args: ''
+    info:
+      created: '&6Créé'
+      removed: '&eRetiré'
+  reload:
+    help:
+      info: '&2Recharge les fichiers de configuration'
+      args: ''
+  get:
+    help:
+      info: '&2Echange de l''xp contre des bouteilles d''xp'
+      args: '[quantité/max]'
+    info:
+      noExp: '&4Tu n''as pas assez d''xp'
+      NoMoney: '&4Tu n''as pas assez d''argent!'
+      NoItems: '&4Tu n''as pas assez de bouteilles en verre'
+      Cost: '&eCoût de transaction: &3[cost]'
+      Order: '&2Tu as converti: &3[bottles] &2bouteilles!'
+  store:
+    help:
+      info: '&2Stock la quantité voulue en bouteille'
+      args: '[exp/niveau/max]'
+    info:
+      converted: '&2Tu as converti: &3[exp] &2xp!'
+  consume:
+    help:
+      info: '&2Consomme la bouteille dans ta main'
+      args: '[quantité/all]'
+    info:
+      consumed: '&2Tu as consommé &6[bottles] &2bouteilles et gagné &6[exp] &2xp'

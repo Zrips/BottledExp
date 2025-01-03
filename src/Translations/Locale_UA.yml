@@ -1,0 +1,78 @@
+Prefix: '&e[&aBottledExp&e] '
+Self: '&4Ви не можете відправити досвід для себе!'
+Reload: '&eФайли конфігурації перезавантажено!'
+Enchant: '&2Ви витратили &3[xp] &2xp на це зачарування'
+GotExp: '&2Ви отримали &3[xp] &2xp'
+Store:
+  Name: '&6|   BottledExp   |'
+  BottleLore: '&eЗберігається Exp: &6[exp]'
+  ExpLoreColor: '&6'
+command:
+  help:
+    output:
+      usage: '&eВикористання: &6%usage%'
+      cmdInfoFormat: '[command] &f- &e[description]'
+      cmdFormat: '&6/[command] &f[arguments]'
+      helpPageDescription: '&e* [description]'
+      title: '&2----&e ==== &6BottledExp &e==== &2----'
+  stats:
+    help:
+      info: '&2Перевірте інформацію про виставку'
+      args: (playername)
+    info:
+      feedback:
+      - '&2Наразі ви маєте &3[xp] &2xp і перебуваєте на рівні &3[level]&2!'
+      - '&2Для наступного рівня вам все ще потрібні &3[xpdelta] &2xp або &3[bottles] &2пляшок!'
+      Moneyfeedback: '&2Це буде коштувати вам  &3[money]'
+  until:
+    help:
+      info: '&2Перевірте, скільки бутлів вам потрібно для досягнення рівня'
+      args: '[level]'
+    info:
+      moreThan: '&4Це має бути більше, ніж ваш рівень!'
+      feedback: '&2Вам потрібно &3[xp] &2xp або &3[bottles] &2пляшок, щоб досягти &3[level]
+        &2рівня'
+      Moneyfeedback: '&2Це буде коштувати вам &3[money]'
+  give:
+    help:
+      info: '&2Віддайте exp іншому гравцеві'
+      args: '[playername] [exp]'
+    info:
+      noExp: '&4У вас недостатньо досвіду, щоб дати'
+      sender: '&2Ви щойно відправили &3[amount] &2xp &3[name] &2і &3[lost] &2xp було
+        втрачено під час переказу'
+      receiver: '&2Ви щойно отримали &3[amount] &2xp від &3[name] &2і &3[lost] &2xp
+        було втрачено під час переказу'
+  eblock:
+    help:
+      info: '&2Створює кастомний блок обміну exp, на який ви дивитеся'
+      args: ''
+    info:
+      created: '&6Створено'
+      removed: '&eВидалено'
+  reload:
+    help:
+      info: '&2Перезавантажити файли конфігурації'
+      args: ''
+  get:
+    help:
+      info: '&2Обміняйте exp на пляшки з exp'
+      args: '[amount/max]'
+    info:
+      noExp: '&4У вас недостатньо досвіду'
+      NoMoney: '&4У вас недостатньо грошей!'
+      NoItems: '&4У вас недостатньо предметів!'
+      Cost: '&eТранзакційні витрати: &3[cost]'
+      Order: '&2Ви замовили: &3[bottles] &2пляшок!'
+  store:
+    help:
+      info: '&2Зберігайте певну кількість у пляшці'
+      args: '[exp/levelL/max]'
+    info:
+      converted: '&2Ви замовили: &3[exp] &2досвіду!'
+  consume:
+    help:
+      info: '&2Споживайте пляшки з рук'
+      args: '[amount/all]'
+    info:
+      consumed: '&2Спожито &6[bottles] &2пляшок і отримано &6[exp] &2досвіду'

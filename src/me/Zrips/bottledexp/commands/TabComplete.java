@@ -67,6 +67,9 @@ public class TabComplete implements TabCompleter {
 
         BottleCMD cmd = BottledExp.getCommandsManager().getCommand(args[0]);
 
+        if (cmd == null)
+            return completionList;
+        
         if (args.length <= 1)
             return completionList;
 

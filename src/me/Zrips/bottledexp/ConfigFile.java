@@ -48,14 +48,16 @@ public class ConfigFile {
     static public boolean CraftExpContainer;
     static public boolean DisableVillagerExpTrade;
     static public boolean DisableMobSpawnerExp;
+    static public boolean DisableDispensers;
 
     static public int xpCost;
     static public int xpEarn;
     static public CMIMaterial settingConsumedItem;
     static public int amountConsumed;
-    static public int moneyCost;
+    static public Double moneyCost;
     static public int LostDurringTransfer;
     static public int StoreMinimalAmount;
+    static public int StoreMaxBottles;
     static public CMIMaterial BlockInteractionBlock;
     static public CMIMaterial BlockInteractionHandItem;
     static public int BlockInteractionGiveEveryTime;
@@ -293,7 +295,7 @@ public class ConfigFile {
             "&2You still need &3[xpdelta] &2xp or &3[bottles] &2bottles for next level!"));
         conf.get("command.stats.info.Moneyfeedback", "&2This will gonna cost you &3[money]");
 
-        conf.get("command.until.help.info", "&2Check how many bootles you need to reach level");
+        conf.get("command.until.help.info", "&2Check how many bottles you need to reach level");
         conf.get("command.until.help.args", "[level]");
         conf.get("command.until.info.moreThan", "&4This should be more than your level!");
         conf.get("command.until.info.feedback", "&2You need &3[xp] &2xp or &3[bottles] &2bottles to reach &3[level] &2level");
@@ -324,6 +326,10 @@ public class ConfigFile {
         conf.get("command.store.help.info", "&2Store particular amount in a bottle");
         conf.get("command.store.help.args", "[exp/levelL/max]");
         conf.get("command.store.info.converted", "&2You have ordered: &3[exp] &2exp!");
+
+        conf.get("command.consume.help.info", "&2Consume bottles from your hand");
+        conf.get("command.consume.help.args", "[amount/all]");
+        conf.get("command.consume.info.consumed", "&2Consumed &6[bottles] &2bottles and gained &6[exp] &2exp");
 
         // Write back config
         conf.save();
@@ -357,7 +363,7 @@ public class ConfigFile {
         xpCost = conf.get("bottle.xpCost", 10);
 
         conf.addComment("bottle.xpEarn", "How much player will get xp from xp bottle", "Default value: 8",
-            "Having this value lower than xpCost will mean that players will loose some amount of exp while converting, which can help out in preventing mindless conversions or posible exploits with other plugins which could give out extra exp");
+            "Having this value lower than xpCost will mean that players will loose some amount of exp while converting, which can help out in preventing mindless conversions or possible exploits with other plugins which could give out extra exp");
         xpEarn = conf.get("bottle.xpEarn", 8);
 
         if (xpCost < xpEarn) {
@@ -378,7 +384,7 @@ public class ConfigFile {
         useVaultEcon = conf.get("bottle.useMoney", false);
 
         conf.addComment("bottle.moneyCost", "How much it will gonna cost");
-        moneyCost = conf.get("bottle.moneyCost", 100);
+        moneyCost = conf.get("bottle.moneyCost", 100D);
 
         conf.addComment("bottle.useBottleMoney", "Do you want to show extra information for how much its gonna cost to level up");
         useBottleMoney = conf.get("bottle.useBottleMoney", false);
@@ -400,6 +406,9 @@ public class ConfigFile {
 
         conf.addComment("bottle.store.MinimalAmount", "Minimal amount of exp player needs to have to be able to store it inside bottle", "Default: 7");
         StoreMinimalAmount = conf.get("bottle.store.MinimalAmount", 7);
+
+        conf.addComment("bottle.store.MaxBottles", "Max amount of bottles player can get from store command when prividing desired amount", "Default: 2304");
+        StoreMaxBottles = conf.get("bottle.store.MaxBottles", 2304);
 
         StoreMinimalAmount = CMINumber.clamp(StoreMinimalAmount, 1, StoreMinimalAmount);
 
@@ -449,8 +458,12 @@ public class ConfigFile {
         DisableVillagerExpTrade = conf.get("bottle.DisableVillagerExpTrade", false);
 
         conf.addComment("bottle.DisableMobSpawnerExp",
-            "When this set to true,destrying mob spawners wont drop exp");
+            "When this set to true, destrying mob spawners wont drop exp");
         DisableMobSpawnerExp = conf.get("bottle.DisableMobSpawnerExp", false);
+
+        conf.addComment("bottle.DisableDispensers",
+            "When this set to true exp bottles will not be dropped from dispensers");
+        DisableDispensers = conf.get("bottle.DisableDispensers", false);
 
         if (CraftExpContainer) {
             ItemStack Item = CMIMaterial.EXPERIENCE_BOTTLE.newItemStack();

@@ -1,8 +1,6 @@
 package me.Zrips.bottledexp.commands;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -17,8 +15,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import me.Zrips.bottledexp.BottledExp;
+import me.Zrips.bottledexp.CMIExp;
 import me.Zrips.bottledexp.Calculations;
 import me.Zrips.bottledexp.ConfigFile;
 import me.Zrips.bottledexp.EBlock;
@@ -26,8 +26,13 @@ import me.Zrips.bottledexp.EBlockInfo;
 import me.Zrips.bottledexp.Language;
 import me.Zrips.bottledexp.Util;
 import net.Zrips.CMILib.Container.CMIArray;
+import net.Zrips.CMILib.Container.CMINumber;
+import net.Zrips.CMILib.Items.CMIItemStack;
+import net.Zrips.CMILib.Items.CMIMaterial;
 import net.Zrips.CMILib.Locale.LC;
 import net.Zrips.CMILib.Logs.CMIDebug;
+import net.Zrips.CMILib.Messages.CMIMessages;
+import net.Zrips.CMILib.NBT.CMINBT;
 
 public class BottledExpCommands implements CommandExecutor {
     public static final String label = "bottle";
@@ -112,19 +117,19 @@ public class BottledExpCommands implements CommandExecutor {
     }
 
     public void sendUsage(CommandSender sender, String cmd) {
-        String message = ChatColor.YELLOW + Language.getMessage("command.help.output.usage");
-        message = message.replace("%usage%", getUsage(cmd));
-        sender.sendMessage(message);
-        sender.sendMessage(Language.getMessage("command.help.output.helpPageDescription").replace("[description]", Language.getMessage("command." + cmd + ".help.info")));
+
+        CMIMessages.sendMessage(sender, ChatColor.YELLOW + Language.getMessage("command.help.output.usage").replace("%usage%", getUsage(cmd)));
+        CMIMessages.sendMessage(sender, Language.getMessage("command.help.output.helpPageDescription").replace("[description]", Language.getMessage("command." + cmd + ".help.info")));
     }
 
     protected boolean help(CommandSender sender) {
-        sender.sendMessage(Language.getMessage("command.help.output.title"));
+        CMIMessages.sendMessage(sender, Language.getMessage("command.help.output.title"));
         for (Entry<String, BottleCMD> m : commands.entrySet()) {
             String cmd = m.getKey();
             if (!hasCommandPermission(sender, cmd))
                 continue;
-            sender.sendMessage(Language.getMessage("command.help.output.cmdInfoFormat").replace("[command]", getUsage(cmd)).replace("[description]", Language.getMessage("command." + cmd + ".help.info")));
+            CMIMessages.sendMessage(sender, Language.getMessage("command.help.output.cmdInfoFormat").replace("[command]", getUsage(cmd)).replace("[description]", Language.getMessage("command." + cmd
+                + ".help.info")));
         }
         return true;
     }
@@ -156,17 +161,15 @@ public class BottledExpCommands implements CommandExecutor {
         // statistics for player
         List<String> msgList = Language.getMessageList("command.stats.info.feedback");
         for (String one : msgList) {
-            one = one.replace("[xp]", "" + Calculations.getPlayerExperience(player))
+            one = one.replace("[xp]", "" + CMIExp.getPlayerExperience(player))
                 .replace("[level]", "" + player.getLevel())
-                .replace("[xpdelta]", "" + Calculations.currentlevelxpdelta(player))
-                .replace("[bottles]", "" + Calculations.xptobottles(Calculations.currentlevelxpdelta(player)));
-            sender.sendMessage(one);
+                .replace("[xpdelta]", "" + CMIExp.currentlevelxpdelta(player))
+                .replace("[bottles]", "" + Calculations.xptobottles(CMIExp.currentlevelxpdelta(player)));
+            CMIMessages.sendMessage(sender, one);
         }
 
         if (ConfigFile.useBottleMoney) {
-            String msg = Language.getMessage("command.stats.info.Moneyfeedback").replace("[money]", "" + (ConfigFile.bottleCost * Calculations.currentlevelxpdelta(
-                player)));
-            sender.sendMessage(msg);
+            CMIMessages.sendMessage(sender, Language.getMessage("command.stats.info.Moneyfeedback").replace("[money]", "" + (ConfigFile.bottleCost * CMIExp.currentlevelxpdelta(player))));
         }
 
         return true;
@@ -195,20 +198,18 @@ public class BottledExpCommands implements CommandExecutor {
         }
 
         if (level <= player.getLevel()) {
-            sender.sendMessage(Language.getMessage("command.until.info.moreThan"));
+            CMIMessages.sendMessage(sender, Language.getMessage("command.until.info.moreThan"));
         } else {
-            int NeedXpToLevel = Calculations.levelToExp(level) - Calculations.getPlayerExperience(player);
+            int NeedXpToLevel = CMIExp.levelToExp(level) - CMIExp.getPlayerExperience(player);
 
             String msg = Language.getMessage("command.until.info.feedback")
                 .replace("[xp]", "" + NeedXpToLevel)
                 .replace("[bottles]", "" + Calculations.xptobottles(NeedXpToLevel))
-                .replace("[level]", args[0]);
-            sender.sendMessage(msg);
+                .replace("[level]", level + "");
+            CMIMessages.sendMessage(sender, msg);
 
             if (ConfigFile.useBottleMoney) {
-                msg = Language.getMessage("command.until.info.Moneyfeedback").replace("[money]", "" + (ConfigFile.bottleCost * Calculations.currentlevelxpdelta(
-                    player)));
-                sender.sendMessage(msg);
+                CMIMessages.sendMessage(sender, Language.getMessage("command.until.info.Moneyfeedback").replace("[money]", "" + (ConfigFile.bottleCost * CMIExp.currentlevelxpdelta(player))));
             }
         }
         return true;
@@ -235,7 +236,7 @@ public class BottledExpCommands implements CommandExecutor {
         EBlock b = blocks.getBlock(loc);
         if (b != null) {
             blocks.removeBlock(b);
-            player.sendMessage(Language.getMessage("command.eblock.info.removed"));
+            CMIMessages.sendMessage(player, Language.getMessage("command.eblock.info.removed"));
             return false;
         }
 
@@ -250,7 +251,7 @@ public class BottledExpCommands implements CommandExecutor {
 
         BottledExp.getConfigManager().saveBlocks();
 
-        player.sendMessage(Language.getMessage("command.eblock.info.created"));
+        CMIMessages.sendMessage(player, Language.getMessage("command.eblock.info.created"));
         return true;
     }
 
@@ -292,7 +293,7 @@ public class BottledExpCommands implements CommandExecutor {
             return false;
         }
 
-        int currentxp = Calculations.getPlayerExperience(player);
+        int currentxp = CMIExp.getPlayerExperience(player);
 
         if (max) {
 
@@ -301,19 +302,21 @@ public class BottledExpCommands implements CommandExecutor {
 
             amount = currentxp / ConfigFile.xpCost;
             if (ConfigFile.settingUseItems && Calculations.countItems(player, ConfigFile.settingConsumedItem) < amount) {
-                player.sendMessage(Language.getMessage("command.get.info.NoItems"));
+                CMIMessages.sendMessage(player, Language.getMessage("command.get.info.NoItems"));
                 return false;
             }
 
             if (ConfigFile.useVaultEcon && ConfigFile.useBottleMoney && Util.getBalance(player) / ConfigFile.moneyCost < 1) {
-                player.sendMessage(Language.getMessage("command.get.info.NoMoney"));
+                CMIMessages.sendMessage(player, Language.getMessage("command.get.info.NoMoney"));
                 return false;
             }
 
             if (amount == 0) {
-                player.sendMessage(Language.getMessage("command.get.info.noExp"));
+                CMIMessages.sendMessage(player, Language.getMessage("command.get.info.noExp"));
                 return false;
             }
+            
+            amount = CMINumber.clamp(amount, 1, 2304);
 
             Util.giveBoottles(player, amount);
 
@@ -330,7 +333,7 @@ public class BottledExpCommands implements CommandExecutor {
         return true;
     }
 
-    @CAnnotation(tab = { "60%%3L%%max" })
+    @CAnnotation(tab = { "60%%3L%%max", "10" })
     public boolean store(final CommandSender sender, final String[] args) {
 
         if (!(sender instanceof Player))
@@ -344,10 +347,18 @@ public class BottledExpCommands implements CommandExecutor {
         Player player = (Player) sender;
 
         int take = 0;
+        int bottleCount = 1;
         boolean max = false;
         boolean levels = false;
 
         String value = args[0];
+
+        if (args.length == 2) {
+            try {
+                bottleCount = Integer.parseInt(args[1]);
+            } catch (Exception e) {
+            }
+        }
 
         if (args[0].toLowerCase().endsWith("l")) {
             levels = true;
@@ -369,20 +380,20 @@ public class BottledExpCommands implements CommandExecutor {
             take = player.getLevel();
 
         if (levels) {
-            int expTo1 = Calculations.levelToExp(player.getLevel() - take);
-            int expTo2 = Calculations.levelToExp(player.getLevel());
+            int expTo1 = CMIExp.levelToExp(player.getLevel() - take);
+            int expTo2 = CMIExp.levelToExp(player.getLevel());
             if (take == player.getLevel())
-                take = Calculations.getPlayerExperience(player);
+                take = CMIExp.getPlayerExperience(player);
             else
                 take = expTo2 - expTo1;
         }
 
         if (max) {
-            take = Calculations.getPlayerExperience(player);
+            take = CMIExp.getPlayerExperience(player);
         }
 
         if (take < ConfigFile.StoreMinimalAmount || player.getLevel() == 0 && player.getExp() <= 0) {
-            player.sendMessage(Language.getMessage("command.get.info.noExp"));
+            CMIMessages.sendMessage(player, Language.getMessage("command.get.info.noExp"));
             return true;
         }
 
@@ -394,21 +405,88 @@ public class BottledExpCommands implements CommandExecutor {
         }
 
         if (ConfigFile.settingUseItems && Calculations.countItems(player, ConfigFile.settingConsumedItem) < 1) {
-            player.sendMessage(Language.getMessage("command.get.info.NoItems"));
+            CMIMessages.sendMessage(player, Language.getMessage("command.get.info.NoItems"));
             return true;
         }
 
         if (ConfigFile.useVaultEcon && Util.getBalance(player) < ConfigFile.moneyCost) {
-            player.sendMessage(Language.getMessage("command.get.info.NoMoney"));
+            CMIMessages.sendMessage(player, Language.getMessage("command.get.info.NoMoney"));
             return true;
         }
 
         if (take <= 0) {
-            player.sendMessage(Language.getMessage("command.get.info.noExp"));
+            CMIMessages.sendMessage(player, Language.getMessage("command.get.info.noExp"));
             return true;
         }
 
-        Util.giveStoredBoottle(player, take, give);
+        Util.giveStoredBottle(player, take, give, bottleCount);
+
+        return true;
+    }
+
+    @CAnnotation(tab = { "60%%all" })
+    public boolean consume(final CommandSender sender, final String[] args) {
+
+        int amount = 0;
+        boolean all = false;
+
+        String playerName = null;
+        for (String one : args) {
+            if (one.equalsIgnoreCase("all")) {
+                all = true;
+                continue;
+            }
+            if (amount == 0) {
+                try {
+                    amount = Integer.parseInt(one);
+                    continue;
+                } catch (NumberFormatException e) {
+                }
+            }
+            playerName = one;
+        }
+
+        if (playerName != null && !playerName.equalsIgnoreCase(sender.getName()) && !Util.hasPermission(sender, "bottledexp.command.consume.others", true)) {
+            return false;
+        }
+
+        Player player = playerName == null && (sender instanceof Player) ? (Player) sender : Bukkit.getPlayer(playerName);
+
+        if (player == null || !player.isOnline()) {
+            LC.info_NoPlayer.sendMessage(sender);
+            return false;
+        }
+
+        ItemStack iih = CMIItemStack.getItemInMainHand(player);
+
+        if (iih == null || !CMIMaterial.get(iih).equals(CMIMaterial.EXPERIENCE_BOTTLE))
+            return false;
+
+        if (all)
+            amount = iih.getAmount();
+
+        amount = CMINumber.clamp(amount, 1, iih.getAmount());
+
+        CMINBT nbt = new CMINBT(iih);
+
+        int expPerBottle = ConfigFile.xpEarn;
+
+        if (nbt.hasNBT(Util.StoredBottledExp)) {
+            expPerBottle = nbt.getInt(Util.StoredBottledExp);
+        }
+
+        iih.setAmount(iih.getAmount() - amount);
+
+        if (iih.getAmount() < 1)
+            CMIItemStack.setItemInMainHand(player, null);
+        else
+            CMIItemStack.setItemInMainHand(player, iih);
+        player.updateInventory();
+
+        int newexp = CMIExp.getPlayerExperience(player) + (amount * expPerBottle);
+        CMIExp.setTotalExperience(player, newexp);
+
+        CMIMessages.sendMessage(player, Language.getMessage("command.consume.info.consumed").replace("[bottles]", String.valueOf(amount)).replace("[exp]", String.valueOf(amount * expPerBottle)));
 
         return true;
     }
@@ -433,8 +511,10 @@ public class BottledExpCommands implements CommandExecutor {
             return false;
         }
 
-        if (args[0].equalsIgnoreCase(player.getName())) {
-            player.sendMessage(Language.getMessage("Self"));
+        String targetName = target.getName();
+
+        if (targetName.equalsIgnoreCase(player.getName())) {
+            CMIMessages.sendMessage(player, Language.getMessage("Self"));
             return false;
         }
 
@@ -447,8 +527,8 @@ public class BottledExpCommands implements CommandExecutor {
             return false;
         }
 
-        if (exp > Calculations.getPlayerExperience(player)) {
-            Language.getMessage("command.give.info.noExp");
+        if (exp > CMIExp.getPlayerExperience(player)) {
+            CMIMessages.sendMessage(player, Language.getMessage("command.give.info.noExp"));
             return false;
         }
 
@@ -457,30 +537,23 @@ public class BottledExpCommands implements CommandExecutor {
             return false;
         }
 
-        int giverExp = Calculations.getPlayerExperience(player) - exp;
+        int giverExp = CMIExp.getPlayerExperience(player) - exp;
         int expToReceive = ((exp * (100 - ConfigFile.LostDurringTransfer)) / 100);
         int lostExp = exp - expToReceive;
-        int receiversExp = Calculations.getPlayerExperience(target) + expToReceive;
+        int receiversExp = CMIExp.getPlayerExperience(target) + expToReceive;
 
-        player.setLevel(0);
-        player.setExp(0);
-        player.setTotalExperience(0);
-        player.giveExp(giverExp);
+        CMIExp.setTotalExperience(player, giverExp);
+        CMIExp.setTotalExperience(target, receiversExp);
 
-        target.setLevel(0);
-        target.setExp(0);
-        target.setTotalExperience(0);
-        target.giveExp(receiversExp);
-
-        String msg = Language.getMessage("command.give.info.sender").replace("[amount]", args[1])
+        String msg = Language.getMessage("command.give.info.sender").replace("[amount]", exp + "")
             .replace("[name]", target.getName())
             .replace("[lost]", String.valueOf(lostExp));
-        player.sendMessage(msg);
+        CMIMessages.sendMessage(player, msg);
 
         msg = Language.getMessage("command.give.info.receiver").replace("[amount]", String.valueOf(expToReceive))
             .replace("[name]", sender.getName())
             .replace("[lost]", String.valueOf(lostExp));
-        target.sendMessage(msg);
+        CMIMessages.sendMessage(target, msg);
 
         return true;
     }

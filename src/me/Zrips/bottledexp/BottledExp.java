@@ -16,6 +16,7 @@ import net.Zrips.CMILib.Colors.CMIChatColor;
 import net.Zrips.CMILib.Locale.LC;
 import net.Zrips.CMILib.Locale.YmlMaker;
 import net.Zrips.CMILib.Messages.CMIMessages;
+import net.Zrips.CMILib.Version.Version;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import ru.tehkode.permissions.PermissionManager;
@@ -35,6 +36,7 @@ public class BottledExp extends JavaPlugin {
     static Recipes Recipes;
     public static Economy economy = null;
     private static NMS nms;
+    private boolean limitedCompatability = false;
 
     private static ConfigFile cmanager;
     public static EBlockInfo EBlocks = new EBlockInfo();
@@ -65,33 +67,30 @@ public class BottledExp extends JavaPlugin {
         cmanager.LoadBlocks();
         cmanager.copyOverTranslations();
 
-        String packageName = getServer().getClass().getPackage().getName();
-        String[] packageSplit = packageName.split("\\.");
-        String version = packageSplit[packageSplit.length - 1].substring(0, packageSplit[packageSplit.length - 1].length() - 3);
-        version = packageSplit[packageSplit.length - 1];
-
         try {
-            Class<?> nmsClass = Class.forName("me.Zrips.bottledexp.nmsUtil." + version);
+
+            Class<?> nmsClass = Version.isCurrentEqualOrHigher(Version.v1_14_R1) ? Class.forName("me.Zrips.bottledexp.nmsUtil.Universal") : Class.forName("me.Zrips.bottledexp.nmsUtil." + Version
+                .getCurrent());
             if (NMS.class.isAssignableFrom(nmsClass)) {
                 nms = (NMS) nmsClass.getConstructor().newInstance();
             } else {
-                CMIMessages.consoleMessage("Something went wrong, please note down version and contact author v:" + version);
-                this.setEnabled(false);
+                CMIMessages.consoleMessage("Something went wrong, please note down version and contact author v:" + Version.getCurrent());
+                limitedCompatability = true;
             }
         } catch (Throwable e) {
-            CMIMessages.consoleMessage("Your server version is not compatible with this plugins version! Plugin will be disabled: " + version);
-            this.setEnabled(false);
-            return;
+            limitedCompatability = true;
         }
+
+        if (limitedCompatability) {
+            CMIMessages.consoleMessage("Some functionality will be disabled until plugin gets updated for this specific server version");
+        }
+
         commands = new BottledExpCommands();
         this.getCommand("bottle").setExecutor(commands);
 
         cmanager.reload(null, false);
 
         YmlMaker f = new YmlMaker(this, "recipes.yml");
-        f.saveDefaultConfig();
-
-        f = new YmlMaker(this, "blocks.yml");
         f.saveDefaultConfig();
 
         Recipes = new Recipes(this);
@@ -176,5 +175,9 @@ public class BottledExp extends JavaPlugin {
 
     public static BottledExpCommands getCommandsManager() {
         return commands;
+    }
+
+    public boolean isLimitedCompatability() {
+        return limitedCompatability;
     }
 }

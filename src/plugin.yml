@@ -1,5 +1,5 @@
 name: BottledExp
-version: 3.1.2.0
+version: 3.2.3.2
 description: "Fills the player's XP into a bottle"
 author: Zrips
 api-version: 1.13
@@ -49,6 +49,8 @@ permissions:
     default: true
   bottledexp.command.store.max:
     default: true
+  bottledexp.command.consume:
+    default: false
   bottledexp.command.give:
     default: op
   bottledexp.expcontainer.craft:

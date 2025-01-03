@@ -17,6 +17,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.ExpBottleEvent;
 import org.bukkit.event.inventory.ClickType;
@@ -40,18 +41,47 @@ import net.Zrips.CMILib.Util.CMIVersionChecker;
 public class EventListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onVillagerTrade(PlayerInteractEntityEvent event) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+    public void onVillagerTrade(PlayerInteractEntityEvent event) {
         if (!ConfigFile.DisableVillagerExpTrade)
             return;
         if (event.getRightClicked().getType() != EntityType.VILLAGER)
             return;
 
+        if (BottledExp.getInstance().isLimitedCompatability())
+            return;
+
         Player player = event.getPlayer();
-        BottledExp.getNms().disableTrade(event.getRightClicked(), player);
+        try {
+            BottledExp.getNms().disableTrade(event.getRightClicked(), player);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void dispenserFireEvent(BlockDispenseEvent event) {
+
+        if (event.isCancelled())
+            return;
+        if (!ConfigFile.DisableDispensers)
+            return;
+
+        ItemStack item = event.getItem();
+
+        if (!CMIMaterial.get(event.getBlock()).equals(CMIMaterial.DISPENSER))
+            return;
+
+        if (!CMIMaterial.get(item).equals(CMIMaterial.EXPERIENCE_BOTTLE))
+            return;
+
+        event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onExpBottleEvent(ExpBottleEvent event) {
+
+        if (event.getExperience() == 0)
+            return;
 
         event.setExperience(ConfigFile.xpEarn);
         try {
@@ -155,7 +185,7 @@ public class EventListener implements Listener {
             return;
         }
 
-        int exp = Calculations.getPlayerExperience((Player) event.getView().getPlayer());
+        int exp = CMIExp.getPlayerExperience((Player) event.getView().getPlayer());
 
         if (exp == 0) {
             event.setCancelled(true);
@@ -169,7 +199,7 @@ public class EventListener implements Listener {
 
         ArrayList<String> lore = new ArrayList<String>();
 
-        int level = Calculations.expToLevel(exp, 10000);
+        int level = CMIExp.expToLevel(exp, 10000);
 
         lore.addAll(Arrays.asList(Language.getMessage("Store.BottleLore").replace("[exp]", String.valueOf(exp)).replace("[level]", String.valueOf(level)).replace("[lvl]", String.valueOf(level)).split(
             "\\\\n")));
@@ -187,17 +217,14 @@ public class EventListener implements Listener {
         if (!event.isLeftClick() && !event.isRightClick())
             return;
 
-        player.setTotalExperience(0);
-        player.setLevel(0);
-        player.setExp(0);
-        player.setTotalExperience(0);
+        CMIExp.setTotalExperience(player, 0);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onExpBottleThrow(PlayerInteractEvent event) {
 
-//	if (!ConfigFile.CraftExpContainer)
-//	    return;
+        if (event.getAction().equals(Action.PHYSICAL))
+            return;
 
         Player player = event.getPlayer();
 
@@ -206,7 +233,6 @@ public class EventListener implements Listener {
         ItemStack item = CMIItemStack.getItemInMainHand(player);
 
         if (item == null || CMIMaterial.isAir(item.getType())) {
-
             try {
                 if (event.getHand().equals(EquipmentSlot.HAND))
                     return;
@@ -214,25 +240,41 @@ public class EventListener implements Listener {
             }
 
             mainHand = false;
+
             item = CMIItemStack.getItemInOffHand(player);
-            if (item == null)
+            if (item == null || CMIMaterial.isAir(item.getType()))
                 return;
         } else {
-            try {
-                if (event.getHand().equals(EquipmentSlot.OFF_HAND))
-                    return;
-                
-            } catch (Throwable e) {
+
+            if (event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
+                if (new CMINBT(item).hasNBT(Util.StoredBottledExp))
+                    event.setCancelled(true);
+                return;
             }
+
+            if (!new CMINBT(item).hasNBT(Util.StoredBottledExp)) {
+                mainHand = false;
+                item = CMIItemStack.getItemInOffHand(player);
+
+                if (item == null || CMIMaterial.isAir(item.getType()))
+                    return;
+            } else
+                try {
+                    if (event.getHand().equals(EquipmentSlot.OFF_HAND))
+                        return;
+                } catch (Throwable e) {
+                }
         }
 
         int exp = 0;
+
+        if (CMIMaterial.isAir(item.getType()) || !CMIMaterial.get(item).equals(CMIMaterial.EXPERIENCE_BOTTLE))
+            return;
 
         CMINBT nbt = new CMINBT(item);
 
         if (nbt.hasNBT(Util.StoredBottledExp) && nbt.getInt(Util.StoredBottledExp) != null) {
             exp = nbt.getInt(Util.StoredBottledExp);
-
         } else {
             if (!item.hasItemMeta())
                 return;
@@ -270,12 +312,9 @@ public class EventListener implements Listener {
                 CMIItemStack.setItemInOffHand(player, null);
         }
         player.updateInventory();
-        int newexp = Calculations.getPlayerExperience(player) + exp;
+        int newexp = CMIExp.getPlayerExperience(player) + exp;
 
-        player.setLevel(0);
-        player.setExp(0);
-        player.setTotalExperience(0);
-        player.giveExp(newexp);
+        CMIExp.setTotalExperience(player, newexp);
 
         event.setCancelled(true);
 
@@ -310,19 +349,16 @@ public class EventListener implements Listener {
 
         ArrayList<String> lore = new ArrayList<String>();
 
-        int exp = Calculations.getPlayerExperience((Player) e.getView().getPlayer());
+        int exp = CMIExp.getPlayerExperience((Player) e.getView().getPlayer());
 
         if (exp == 0) {
             e.getInventory().setResult(null);
             return;
         }
 
-        int level = Calculations.expToLevel(exp, 10000);
+        int level = CMIExp.expToLevel(exp, 10000);
 
         meta.setDisplayName(Language.getMessage("Store.Name").replace("[exp]", String.valueOf(exp)).replace("[level]", String.valueOf(level)).replace("[lvl]", String.valueOf(level)));
-
-//	lore.add(Language.getMessage("Store.BottleLore").replace("[exp]", String.valueOf(exp)));
-//	lore.add(Language.getMessage("Store.ExpLoreColor") + exp);
 
         lore.addAll(Arrays.asList(Language.getMessage("Store.BottleLore").replace("[exp]", String.valueOf(exp)).replace("[level]", String.valueOf(level)).replace("[lvl]", String.valueOf(level)).split(
             "\\\\n")));
@@ -358,16 +394,16 @@ public class EventListener implements Listener {
             EnchantLevel = getExpLevelCost - event.whichButton() - 1;
         }
         leveltoleave = PlayerLevel - EnchantLevel;
-        levelxp = Calculations.getPlayerExperience(player) - Calculations.levelToExp(PlayerLevel);
-        percentage = levelxp * 100 / Calculations.deltaLevelToExp(PlayerLevel);
-        newlevelpercentagexp = (int) (Calculations.deltaLevelToExp(leveltoleave) * percentage / 100);
+        levelxp = CMIExp.getPlayerExperience(player) - CMIExp.levelToExp(PlayerLevel);
+        percentage = levelxp * 100 / CMIExp.deltaLevelToExp(PlayerLevel);
+        newlevelpercentagexp = (int) (CMIExp.deltaLevelToExp(leveltoleave) * percentage / 100);
         if (ConfigFile.UseThreeButtonEnchant) {
-            xptoleave = Calculations.levelToExp(leveltoleave) + newlevelpercentagexp;
-            takenxp = Calculations.getPlayerExperience(player) - xptoleave;
+            xptoleave = CMIExp.levelToExp(leveltoleave) + newlevelpercentagexp;
+            takenxp = CMIExp.getPlayerExperience(player) - xptoleave;
             // don't do anything, let Minecraft to do dirty job
         } else {
-            xptoleave = Calculations.levelToExp(PlayerLevel - getExpLevelCost) + newlevelpercentagexp;
-            takenxp = Calculations.getPlayerExperience(player) - xptoleave;
+            xptoleave = CMIExp.levelToExp(PlayerLevel - getExpLevelCost) + newlevelpercentagexp;
+            takenxp = CMIExp.getPlayerExperience(player) - xptoleave;
 //	    player.setLevel(0);
 //	    player.setExp(0);
 //	    player.setTotalExperience(0);
